@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\CategoryRequest;
-use App\Http\Requests\GerneRquest;
+use App\Http\Requests\GenreRquest;
 use App\Models\Category;
 use App\Models\Genre;
 use Illuminate\Http\Request;
@@ -17,7 +17,7 @@ class GenreController extends Controller
         return Genre::all();
     }
 
-    public function store(GerneRquest $request)
+    public function store(GenreRquest $request)
     {
         return Genre::create($request->all());
     }
@@ -27,7 +27,7 @@ class GenreController extends Controller
         return $gener;
     }
 
-    public function update(GerneRquest $request, Genre $gener)
+    public function update(GenreRquest $request, Genre $gener)
     {
         $gener->fill($request->all());
         $gener->update();
