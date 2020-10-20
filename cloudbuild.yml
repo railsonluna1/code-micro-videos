@@ -4,6 +4,10 @@ steps:
     name: 'gcr.io/$PROJECT_ID/docker-compose'
     args: ['-f', 'docker-compose.prod.yaml', 'up', '-d']
 
+  - id: "Chown in /var/www"
+    name: 'gcr.io/cloud-builders/docker'
+    args: ['exec','-u','root','-t','micro-videos-app','chown','-R','www-data:www-data','/var/www']
+
   - id: "Rodando composer"
     name: 'gcr.io/cloud-builders/docker'
     args: ['exec', '-t', 'micro-videos-app', 'composer', 'install']
@@ -15,10 +19,6 @@ steps:
   - id: "Gerando .env.testing"
     name: 'gcr.io/cloud-builders/docker'
     args: ['exec', '-t', 'micro-videos-app', 'cp', '.env.example.testing', '.env.testing']
-
-#  - id: "Chown in /var/www"
-#    name: 'gcr.io/cloud-builders/docker'
-#    args: ['exec','-u','root','-t','app','chown','-R','www-data:www-data','/var/www']
 
   - id: "Executando key:generete"
     name: 'gcr.io/cloud-builders/docker'
