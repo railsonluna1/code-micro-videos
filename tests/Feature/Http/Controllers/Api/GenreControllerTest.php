@@ -6,9 +6,12 @@ use App\Models\Genre;
 use Illuminate\Foundation\Testing\TestResponse;
 
 use Tests\TestCase;
+use Tests\Traits\TestValidations;
 
 class GenreControllerTest extends TestCase
 {
+    use TestValidations;
+
     public function testIndex()
     {
         $genre = factory(Genre::class)->create();
@@ -84,30 +87,18 @@ class GenreControllerTest extends TestCase
 
     protected function invalidNameRequired(TestResponse $response)
     {
-        $response->assertStatus(422);
-        $response->assertJsonValidationErrors(['name']);
+        $this->assertInvalidationFilds($response, ['name'], 'required');
         $response->assertJsonMissingValidationErrors(['is_active']);
-        $response->assertJsonFragment([
-            \Lang::get('validation.required', ['attribute' => 'name'])
-        ]);
     }
 
     protected function invalidNameMax(TestResponse $response)
     {
-        $response->assertStatus(422);
-        $response->assertJsonValidationErrors(['name']);
-        $response->assertJsonFragment([
-            \Lang::get('validation.max.string', ['attribute' => 'name', 'max' => 255])
-        ]);
+        $this->assertInvalidationFilds($response, ['name'], 'max.string', ['max' => 255]);
     }
 
     protected function invalidIsActiveBoolean(TestResponse $response)
     {
-        $response->assertStatus(422);
-        $response->assertJsonValidationErrors(['is_active']);
-        $response->assertJsonFragment([
-            \Lang::get('validation.boolean', ['attribute' => 'is active'])
-        ]);
+        $this->assertInvalidationFilds($response, ['is_active'], 'boolean');
     }
 
 }
