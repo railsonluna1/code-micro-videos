@@ -9,6 +9,8 @@ services:
         depends_on:
             - db
             - redis
+        volumes:
+          - .:/var/www
 
     nginx:
         build: .docker/nginx
