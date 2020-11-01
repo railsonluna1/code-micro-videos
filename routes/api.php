@@ -23,5 +23,6 @@ Route::group(['namespace' => 'Api'], function() {
     Route::resource('categories', 'CategoryController', $excpetCreateAndEdit);
     Route::resource('geners', 'GenreController', $excpetCreateAndEdit);
     Route::resource('cast_members', 'CastMemberController', $excpetCreateAndEdit);
+    Route::resource('videos', 'VideoController', $excpetCreateAndEdit);
 });
 
