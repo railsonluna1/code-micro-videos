@@ -6,32 +6,39 @@ use App\Models\Genre;
 use Illuminate\Foundation\Testing\TestResponse;
 
 use Tests\TestCase;
+use Tests\Traits\TestSaves;
 use Tests\Traits\TestValidations;
 
 class GenreControllerTest extends TestCase
 {
-    use TestValidations;
+    use TestValidations, TestSaves;
+
+    private $genre;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->genre = factory(Genre::class)->create();
+    }
 
     public function testIndex()
     {
-        $genre = factory(Genre::class)->create();
         $response = $this->get(route('geners.index'));
 
         $response
             ->assertStatus(200)
-            ->assertJson([$genre->toArray()])
+            ->assertJson([$this->genre->toArray()])
         ;
 
     }
 
     public function testShow()
     {
-        $genre = factory(Genre::class)->create();
-        $response = $this->get(route('geners.show', ['gener' => $genre->id]));
+        $response = $this->get(route('geners.show', ['gener' => $this->genre->id]));
 
         $response
             ->assertStatus(200)
-            ->assertJson($genre->toArray());
+            ->assertJson($this->genre->toArray());
     }
 
     public function testStore()
@@ -101,4 +108,19 @@ class GenreControllerTest extends TestCase
         $this->assertInvalidationFilds($response, ['is_active'], 'boolean');
     }
 
+
+    protected function model()
+    {
+        return Genre::class;
+    }
+
+    protected function routerStore()
+    {
+        return route('geners.store.store');
+    }
+
+    protected function routerUpdate()
+    {
+        return route('geners.store.update', ['gener' => $this->ge->id]);
+    }
 }

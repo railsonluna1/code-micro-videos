@@ -24,8 +24,9 @@ class CategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|max:255|unique:categories',
-            'is_active' => 'boolean'
+            'name' => 'required|max:255',
+            'is_active' => 'boolean',
+            'description' => 'nullable'
         ];
     }
 }

@@ -2,46 +2,25 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 
 
-class CategoryController extends Controller
+class CategoryController extends BasicCurdController
 {
 
-    public function index()
+    protected function model()
     {
-        return Category::all();
+        return Category::class;
     }
 
-    public function store(CategoryRequest $request)
+    protected function rulesStore()
     {
-        /** @var Category $category */
-        $category = Category::create($request->all());
-        $category->refresh();
-
-        return $category;
+        return (new CategoryRequest())->rules();
     }
 
-    public function show(Category $category)
+    protected function rulesUpdate()
     {
-        return $category;
-    }
-
-    public function update(CategoryRequest $request, Category $category)
-    {
-        $category->fill($request->all());
-        $category->update();
-        $category->refresh();
-
-        return $category;
-    }
-
-    public function destroy(Category $category)
-    {
-        $category->delete();
-
-        return response()->noContent();
+        return (new CategoryRequest())->rules();
     }
 }
