@@ -69,20 +69,17 @@ class GenreControllerTest extends TestCase
 
     public function testInvalidPost()
     {
-        $response = $this->json('POST', route('geners.store'), []);
-        $this->invalidNameRequired($response);
+        $data = ['name' => ''];
+        $this->assertInvalidationInStoreAction($data, 'required');
+        $this->assertInvalidationInUpdateAction($data, 'required');
 
-        $response = $this->json(
-            'POST', route('geners.store'),
-            ['name' => str_repeat('a', 258)]
-        );
-        $this->invalidNameMax($response);
+        $data = ['name' => str_repeat('a', 258)];
+        $this->assertInvalidationInStoreAction($data, 'max.string', ['max' => 255]);
+        $this->assertInvalidationInUpdateAction($data, 'max.string', ['max' => 255]);
 
-        $response = $this->json(
-            'POST', route('geners.store'),
-            ['is_active' => 'a']
-        );
-        $this->invalidIsActiveBoolean($response);
+        $data =  ['is_active' => 'a'];
+        $this->assertInvalidationInStoreAction($data, 'boolean');
+        $this->assertInvalidationInUpdateAction($data, 'boolean');
     }
 
     public function testDestroy()
@@ -94,18 +91,18 @@ class GenreControllerTest extends TestCase
 
     protected function invalidNameRequired(TestResponse $response)
     {
-        $this->assertInvalidationFilds($response, ['name'], 'required');
+        $this->assertInvalidationFields($response, ['name'], 'required');
         $response->assertJsonMissingValidationErrors(['is_active']);
     }
 
     protected function invalidNameMax(TestResponse $response)
     {
-        $this->assertInvalidationFilds($response, ['name'], 'max.string', ['max' => 255]);
+        $this->assertInvalidationFields($response, ['name'], 'max.string', ['max' => 255]);
     }
 
     protected function invalidIsActiveBoolean(TestResponse $response)
     {
-        $this->assertInvalidationFilds($response, ['is_active'], 'boolean');
+        $this->assertInvalidationFields($response, ['is_active'], 'boolean');
     }
 
 
@@ -116,11 +113,11 @@ class GenreControllerTest extends TestCase
 
     protected function routerStore()
     {
-        return route('geners.store.store');
+        return route('geners.store');
     }
 
     protected function routerUpdate()
     {
-        return route('geners.store.update', ['gener' => $this->ge->id]);
+        return route('geners.update', ['gener' => $this->genre->id]);
     }
 }
